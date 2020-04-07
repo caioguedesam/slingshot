@@ -60,39 +60,13 @@ public class Ball : MonoBehaviour
 
     private void Update() {
 
+        // IMPORTANT: Fix input! Use swipe manager
         if(landed && Input.GetMouseButtonUp(0)) {
             Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
 
             StartCoroutine(SlingHandler());
             slingToggle = false;
         }
-
-        /*if(landed) {
-            //RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1f, Vector2.up, 100f, slingLayerMask);
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 100f, slingLayerMask);
-            Debug.DrawRay(transform.position, Vector2.up * 100f, Color.yellow, .1f);
-
-            if (hit) {
-                if (RopeCastPositionCheck(hit.point)) {
-                    transform.position = new Vector2(rope.ropeSegments[(rope.segmentCount - 1) / 2].posNow.x, hit.point.y + coll.radius);
-                    Debug.Log("Setting position according to rope");
-                }
-                else if(slingToggle) {
-                    // Sling
-                    slingToggle = false;
-                    landed = false;
-                    rb.velocity = slingDirection * jumpForce;
-                    Debug.Log("Let go");
-                }
-            }
-            else if(slingToggle) {
-                // Sling
-                slingToggle = false;
-                landed = false;
-                rb.velocity = slingDirection * jumpForce;
-                Debug.Log("Let go");
-            }
-        }*/
     }
 
     public IEnumerator SlingHandler() {
@@ -101,10 +75,15 @@ public class Ball : MonoBehaviour
         Vector2 pastVelocity = pullVelocity;
         Debug.Log(pullVelocity + "velocity");
 
+        bool moveRight = (transform.position.x < 0);
+
         while(pullVelocity.y <= 0) {
             Debug.Log(pullVelocity + "velocity");
 
             transform.position = new Vector2(pullSegment.posNow.x, pullSegment.posNow.y + coll.radius / 2);
+
+            // Not sure if I need THIS
+            rb.velocity = slingDirection * jumpForce;
 
             yield return new WaitForEndOfFrame();
 
@@ -115,7 +94,13 @@ public class Ball : MonoBehaviour
         while(pullVelocity.y > 0) {
             Debug.Log(pullVelocity + "velocity");
 
-            transform.position = new Vector2(pullSegment.posNow.x, pullSegment.posNow.y + coll.radius / 2);
+            if (moveRight)
+                transform.position = new Vector2(Mathf.Max(transform.position.x, pullSegment.posNow.x), pullSegment.posNow.y + coll.radius / 2);
+            else
+                transform.position = new Vector2(Mathf.Min(transform.position.x, pullSegment.posNow.x), pullSegment.posNow.y + coll.radius / 2);
+
+            // Not sure if I need THIS
+            rb.velocity = slingDirection * jumpForce;
 
             yield return new WaitForEndOfFrame();
 
@@ -127,7 +112,7 @@ public class Ball : MonoBehaviour
         // Sling
         landed = false;
         rb.velocity = slingDirection * jumpForce;
-        Debug.Log("Let go");
+        Debug.Log("Let go dir: " + slingDirection);
     }
 
     public bool RopeCastPositionCheck(Vector2 pos) {
@@ -147,7 +132,6 @@ public class Ball : MonoBehaviour
         Debug.Log("Sling with direction " + slingDirection.normalized);
         slingToggle = true;
         this.slingDirection = slingDirection.normalized;
-        //this.slingDirection = slingDirection;
     }
 
 }
