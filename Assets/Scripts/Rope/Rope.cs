@@ -52,8 +52,8 @@ public class Rope : MonoBehaviour
         Vector3 ropeStartPoint = startPoint.position;
 
         // Dynamically calculating new segment length
-        //ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
-        ropeSegLen = ropeOriginalSegLen / (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef);
+        ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
+        //ropeSegLen = ropeOriginalSegLen / (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef);
         ropeSegLen = Mathf.Min(ropeSegLen, ropeOriginalSegLen);
 
         for (int i = 0; i < segmentCount; i++) {
@@ -76,8 +76,8 @@ public class Rope : MonoBehaviour
     void Update()
     {
         // Dynamically calculating new segment length
-        //ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
-        ropeSegLen = ropeOriginalSegLen / (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef);
+        ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
+        //ropeSegLen = ropeOriginalSegLen / (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef);
         ropeSegLen = Mathf.Min(ropeSegLen, ropeOriginalSegLen);
 
         DrawRope();
@@ -95,6 +95,13 @@ public class Rope : MonoBehaviour
         coll.points = currentPositions.ToArray();
     }
 
+    public void ResetRope() {
+        for (int i = 0; i < segmentCount; i++) {
+            RopeSegment firstSegment = ropeSegments[i];
+            firstSegment.posOld = firstSegment.posNow;
+        }
+    }
+
     private void Simulate() {
 
         // SIMULATION
@@ -106,7 +113,8 @@ public class Rope : MonoBehaviour
             Vector2 velocity = firstSegment.posNow - firstSegment.posOld;
 
             firstSegment.posOld = firstSegment.posNow;
-            firstSegment.posNow += velocity;
+            // Rate of change limited to value 0.5 in x and y
+            firstSegment.posNow += Vector2.Min(velocity, new Vector2(0.5f, 0.5f));
 
             // Adding gravity force for movement calculation
             firstSegment.posNow += gravityForce * Time.deltaTime;

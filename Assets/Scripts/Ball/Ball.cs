@@ -117,7 +117,7 @@ public class Ball : MonoBehaviour
         }*/
     }
 
-    public IEnumerator SlingHandler() {
+    public IEnumerator SlingHandler(Vector3 slingDirection) {
         Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
         Vector2 pullVelocity = pullSegment.posNow - pullSegment.posOld;
         Vector2 pastVelocity = pullVelocity;
@@ -158,8 +158,8 @@ public class Ball : MonoBehaviour
         // Sling
         falling = false;
         landed = false;
-        rb.velocity = slingDirection * jumpForce;
-        Debug.Log("Let go dir: " + slingDirection);
+        rb.velocity = slingDirection.normalized * (slingDirection.magnitude / rope.maxSlingRadius) * jumpForce;
+        Debug.Log("Let go factor: " + (slingDirection.magnitude / rope.maxSlingRadius));
     }
 
     public bool RopeCastPositionCheck(Vector2 pos) {
@@ -181,10 +181,10 @@ public class Ball : MonoBehaviour
         this.slingDirection = slingDirection.normalized;
     }*/
 
-    public void Sling() {
+    public void Sling(Vector3 slingDirection) {
         Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
 
-        StartCoroutine(SlingHandler());
+        StartCoroutine(SlingHandler(slingDirection));
         slingToggle = false;
     }
 

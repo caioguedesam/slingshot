@@ -8,7 +8,7 @@ public class RopePositioning : MonoBehaviour
     private Transform startPoint;
     private Transform endPoint;
 
-    private bool isMidPositioning = false;
+    [SerializeField] private bool isMidPositioning = false;
     private bool canReposition = true;
 
     [Range(0f, 1f)] public float positioningCooldown = 0.15f;
@@ -24,15 +24,19 @@ public class RopePositioning : MonoBehaviour
 
         if(canReposition) {
             if (!isMidPositioning && !rope.objectLanded && Input.GetMouseButtonDown(0)) {
+                Debug.Log("Reposition start and end");
                 isMidPositioning = true;
                 startPoint.position = mousePosWorld;
-            }
-
-            if (isMidPositioning && !rope.objectLanded && Input.GetMouseButton(0)) {
                 endPoint.position = mousePosWorld;
             }
 
-            if (isMidPositioning && !rope.objectLanded && Input.GetMouseButtonUp(0)) {
+            if (isMidPositioning && Input.GetMouseButton(0)) {
+                Debug.Log("Reposition end");
+                endPoint.position = mousePosWorld;
+            }
+
+            if (isMidPositioning && Input.GetMouseButtonUp(0)) {
+                Debug.Log("Reposition end");
                 isMidPositioning = false;
                 endPoint.position = mousePosWorld;
             }
