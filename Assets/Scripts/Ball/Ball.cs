@@ -31,11 +31,41 @@ public class Ball : MonoBehaviour
         coll = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
 
-        //Time.timeScale = .1f;
+        //Time.timeScale = .5f;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) {
+    /*private void OnCollisionEnter2D(Collision2D collision) {
         if(!landed && collision.collider.CompareTag("Rope")) {
+            landedOnRopeEvent.Raise();
+            landed = true;
+            // Do I need this?
+            rb.velocity = Vector2.zero;
+        }
+    }*/
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        /*if (!landed && collision.collider.CompareTag("Rope") && Vector2.Distance(rb.velocity, Vector2.zero) < 0.3) {
+            landedOnRopeEvent.Raise();
+            landed = true;
+            // Do I need this?
+            rb.velocity = Vector2.zero;
+        }*/
+        if (!landed && collision.collider.CompareTag("Rope") && !Input.GetMouseButton(0)) {
+            landedOnRopeEvent.Raise();
+            landed = true;
+            // Do I need this?
+            rb.velocity = Vector2.zero;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision) {
+        /*if (!landed && collision.collider.CompareTag("Rope") && Vector2.Distance(rb.velocity, Vector2.zero) < 0.3) {
+            landedOnRopeEvent.Raise();
+            landed = true;
+            // Do I need this?
+            rb.velocity = Vector2.zero;
+        }*/
+        if (!landed && collision.collider.CompareTag("Rope") && !Input.GetMouseButton(0)) {
             landedOnRopeEvent.Raise();
             landed = true;
             // Do I need this?
@@ -65,12 +95,12 @@ public class Ball : MonoBehaviour
         slingDirection = rope.slingDirection.normalized;
 
         // IMPORTANT: Fix input! Use swipe manager
-        if(landed && Input.GetMouseButtonUp(0)) {
+        /*if(landed && Input.GetMouseButtonUp(0)) {
             Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
 
             StartCoroutine(SlingHandler());
             slingToggle = false;
-        }
+        }*/
     }
 
     public IEnumerator SlingHandler() {
@@ -135,5 +165,12 @@ public class Ball : MonoBehaviour
         slingToggle = true;
         this.slingDirection = slingDirection.normalized;
     }*/
+
+    public void Sling() {
+        Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
+
+        StartCoroutine(SlingHandler());
+        slingToggle = false;
+    }
 
 }

@@ -16,7 +16,9 @@ public class PullPosition : MonoBehaviour
 
     private void Update() {
 
-        transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        preSlingPosition = rope.preSlingPoint;
+
+        /*transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         float distance = Vector2.Distance(transform.position, preSlingPosition);
 
@@ -24,6 +26,11 @@ public class PullPosition : MonoBehaviour
             Vector2 dir = (Vector2)transform.position - preSlingPosition;
             dir *= maxSlingRadius / distance;
             transform.position = preSlingPosition + dir;
-        }
+        }*/
+
+        Vector2 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 distance = mousePosWorld - preSlingPosition;
+        distance = Vector2.ClampMagnitude(distance, maxSlingRadius);
+        transform.position = preSlingPosition + distance;
     }
 }

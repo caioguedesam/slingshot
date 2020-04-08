@@ -17,7 +17,9 @@ public class Rope : MonoBehaviour
     // Positions of points in rope segments
     private List<Vector2> currentPositions = new List<Vector2>();
     // Rope segment length
+    [SerializeField] private float ropeOriginalSegLen = 0.25f;
     [SerializeField] private float ropeSegLen = 0.25f;
+    [SerializeField] private float ropeDistanceRef = 2f;
 
     // Number of points
     public int segmentCount = 35;
@@ -49,7 +51,12 @@ public class Rope : MonoBehaviour
         coll = GetComponent<EdgeCollider2D>();
         Vector3 ropeStartPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        for(int i = 0; i < segmentCount; i++) {
+        // Dynamically calculating new segment length
+        //ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
+        ropeSegLen = ropeOriginalSegLen / (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef);
+        ropeSegLen = Mathf.Min(ropeSegLen, ropeOriginalSegLen);
+
+        for (int i = 0; i < segmentCount; i++) {
             ropeSegments.Add(new RopeSegment(ropeStartPoint));
             ropeStartPoint.y -= ropeSegLen;
         }
@@ -66,9 +73,16 @@ public class Rope : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Dynamically calculating new segment length
+        //ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
+        ropeSegLen = ropeOriginalSegLen / (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef);
+        ropeSegLen = Mathf.Min(ropeSegLen, ropeOriginalSegLen);
+
         DrawRope();
-        //Time.timeScale = .1f;
+
         UpdateCollider();
+
+        CheckForSling();
     }
 
     private void FixedUpdate() {
@@ -103,8 +117,6 @@ public class Rope : MonoBehaviour
         for(int i = 0; i < 50; i++) {
             ApplyConstraints();
         }
-
-        CheckForSling();
     }
 
     private void ApplyConstraints() {
@@ -118,6 +130,8 @@ public class Rope : MonoBehaviour
         RopeSegment endSegment = ropeSegments[ropeSegments.Count - 1];
         endSegment.posNow = endPoint.position;
         ropeSegments[ropeSegments.Count - 1] = endSegment;
+
+        preSlingPoint = firstSegment.posNow + (endSegment.posNow - firstSegment.posNow) / 2;
 
         RopeSegment middleSegment = ropeSegments[(segmentCount - 1) / 2];
         // Use something like this for slingshot fx
@@ -137,7 +151,7 @@ public class Rope : MonoBehaviour
         }
         else {
             //preSlingPoint = middleSegment.posNow;
-            preSlingPoint = firstSegment.posNow + (endSegment.posNow - firstSegment.posNow) / 2;
+            //preSlingPoint = firstSegment.posNow + (endSegment.posNow - firstSegment.posNow) / 2;
         }
 
         for (int i = 0; i < segmentCount - 1; i++) {
@@ -192,7 +206,7 @@ public class Rope : MonoBehaviour
 
     public void CheckForSling() {
         // Just slinged object away
-        if(objectLanded && Input.GetMouseButtonUp(0)) {
+        if(isPreparingSling && Input.GetMouseButtonUp(0)) {
             isPreparingSling = false;
             objectLanded = false;
             slingEvent.Raise(slingDirection);
@@ -207,6 +221,11 @@ public class Rope : MonoBehaviour
         public RopeSegment(Vector2 pos) {
             posNow = posOld = pos;
         }
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(preSlingPoint, .25f);
     }
 }
 
