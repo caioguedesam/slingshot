@@ -60,6 +60,8 @@ public class Ball : MonoBehaviour
 
     private void Update() {
 
+        slingDirection = rope.slingDirection.normalized;
+
         // IMPORTANT: Fix input! Use swipe manager
         if(landed && Input.GetMouseButtonUp(0)) {
             Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
@@ -128,10 +130,10 @@ public class Ball : MonoBehaviour
         return pos.y > transform.position.y;
     }
 
-    public void Sling(Vector3 slingDirection) {
+    /*public void Sling(Vector3 slingDirection) {
         Debug.Log("Sling with direction " + slingDirection.normalized);
         slingToggle = true;
         this.slingDirection = slingDirection.normalized;
-    }
+    }*/
 
 }

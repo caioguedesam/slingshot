@@ -25,8 +25,10 @@ public class Rope : MonoBehaviour
     private float lineWidth = 0.1f;
 
     // Sling variables
-    private Vector2 preSlingPoint;
-    private Vector2 slingDirection;
+    [Header("Sling Variables")]
+    public float maxSlingRadius = 1f;
+    [HideInInspector] public Vector2 preSlingPoint;
+    [HideInInspector] public Vector2 slingDirection;
     [ReadOnly] [SerializeField] private bool isPreparingSling = false;
     [ReadOnly][SerializeField] private bool objectLanded = false;
 
@@ -120,17 +122,22 @@ public class Rope : MonoBehaviour
         RopeSegment middleSegment = ropeSegments[(segmentCount - 1) / 2];
         // Use something like this for slingshot fx
         if (objectLanded && Input.GetMouseButton(0)) {
+            // Preparing sling state + event
             if(!isPreparingSling) {
                 isPreparingSling = true;
                 prepareSlingEvent.Raise();
             }
 
+            // Setting pull position
             middleSegment.posNow = middlePoint.position;
             slingDirection = preSlingPoint - middleSegment.posNow;
             ropeSegments[(segmentCount - 1) / 2] = middleSegment;
+
+            Debug.DrawRay(middleSegment.posNow, slingDirection, Color.yellow, .05f);
         }
         else {
-            preSlingPoint = middleSegment.posNow;
+            //preSlingPoint = middleSegment.posNow;
+            preSlingPoint = firstSegment.posNow + (endSegment.posNow - firstSegment.posNow) / 2;
         }
 
         for (int i = 0; i < segmentCount - 1; i++) {
