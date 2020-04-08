@@ -49,7 +49,7 @@ public class Rope : MonoBehaviour
     {
         lineRenderer = GetComponent<LineRenderer>();
         coll = GetComponent<EdgeCollider2D>();
-        Vector3 ropeStartPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 ropeStartPoint = startPoint.position;
 
         // Dynamically calculating new segment length
         //ropeSegLen = (Vector2.Distance(startPoint.position, endPoint.position) / ropeDistanceRef) * ropeOriginalSegLen;
@@ -65,6 +65,8 @@ public class Rope : MonoBehaviour
     }
 
     private void InitializePositionList() {
+        if (currentPositions.Count > 0) currentPositions.Clear();
+
         for(int i = 0; i < segmentCount; i++) {
             currentPositions.Add(Vector2.zero);
         }

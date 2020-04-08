@@ -9,6 +9,9 @@ public class RopePositioning : MonoBehaviour
     private Transform endPoint;
 
     private bool isMidPositioning = false;
+    private bool canReposition = true;
+
+    [Range(0f, 1f)] public float positioningCooldown = 0.15f;
 
     private void Start() {
         rope = GetComponent<Rope>();
@@ -19,18 +22,32 @@ public class RopePositioning : MonoBehaviour
     private void Update() {
         Vector2 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (!isMidPositioning && !rope.objectLanded && Input.GetMouseButtonDown(0)) {
-            isMidPositioning = true;
-            startPoint.position = mousePosWorld;
-        }
+        if(canReposition) {
+            if (!isMidPositioning && !rope.objectLanded && Input.GetMouseButtonDown(0)) {
+                isMidPositioning = true;
+                startPoint.position = mousePosWorld;
+            }
 
-        if(isMidPositioning && !rope.objectLanded && Input.GetMouseButton(0)) {
-            endPoint.position = mousePosWorld;
-        }
+            if (isMidPositioning && !rope.objectLanded && Input.GetMouseButton(0)) {
+                endPoint.position = mousePosWorld;
+            }
 
-        if(isMidPositioning && !rope.objectLanded && Input.GetMouseButtonUp(0)) {
-            isMidPositioning = false;
-            endPoint.position = mousePosWorld;
+            if (isMidPositioning && !rope.objectLanded && Input.GetMouseButtonUp(0)) {
+                isMidPositioning = false;
+                endPoint.position = mousePosWorld;
+            }
         }
+    }
+
+    public IEnumerator PositioningCooldown() {
+        canReposition = false;
+
+        yield return new WaitForSeconds(positioningCooldown);
+
+        canReposition = true;
+    }
+
+    public void StartCooldown() {
+        if (canReposition) StartCoroutine(PositioningCooldown());
     }
 }

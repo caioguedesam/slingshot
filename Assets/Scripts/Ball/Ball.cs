@@ -17,6 +17,7 @@ public class Ball : MonoBehaviour
     public float jumpForce = 5f;
     [SerializeField] private bool slingToggle = false;
     private bool landed = false;
+    private bool falling = false;
     private Vector3 slingDirection;
     [Space(2)]
 
@@ -25,6 +26,7 @@ public class Ball : MonoBehaviour
     [Space(5)]
 
     [Header("Events")]
+    [SerializeField] private SCOB_BaseEvent fallingEvent;
     [SerializeField] private SCOB_BaseEvent landedOnRopeEvent;
 
     private void Start() {
@@ -88,6 +90,11 @@ public class Ball : MonoBehaviour
             rb.velocity = slingDirection * jumpForce;
             Debug.Log("Let go");
         }*/
+
+        if(!falling && !landed && rb.velocity.y < 0) {
+            falling = true;
+            fallingEvent.Raise();
+        }
     }
 
     private void Update() {
@@ -100,6 +107,13 @@ public class Ball : MonoBehaviour
 
             StartCoroutine(SlingHandler());
             slingToggle = false;
+        }*/
+
+        /*if (landed) {
+            RaycastHit2D hit = Physics2D.CircleCast(transform.position, coll.radius + 0.01f, Vector2.zero, 0f, slingLayerMask);
+            if(!hit) {
+                landed = false;
+            }
         }*/
     }
 
@@ -142,6 +156,7 @@ public class Ball : MonoBehaviour
         }
 
         // Sling
+        falling = false;
         landed = false;
         rb.velocity = slingDirection * jumpForce;
         Debug.Log("Let go dir: " + slingDirection);
@@ -173,4 +188,11 @@ public class Ball : MonoBehaviour
         slingToggle = false;
     }
 
+
+    private void OnDrawGizmos() {
+        if(Application.isPlaying) {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, coll.radius + 0.01f);
+        }
+    }
 }

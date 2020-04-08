@@ -434,6 +434,7 @@ MonoBehaviour:
   slingLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  fallingEvent: {fileID: 11400000, guid: 0bc0d907b3075d845ae6201d7332e36a, type: 2}
   landedOnRopeEvent: {fileID: 11400000, guid: 3d14e2ea2f01e3d49a90575764724b98, type: 2}
 --- !u!58 &217155573
 CircleCollider2D:
@@ -1099,6 +1100,7 @@ GameObject:
   - component: {fileID: 1898762518}
   - component: {fileID: 1898762516}
   - component: {fileID: 1898762517}
+  - component: {fileID: 1898762519}
   m_Layer: 8
   m_Name: Rope
   m_TagString: Rope
@@ -1306,3 +1308,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faeb8e0eeeca6bf41a9d9c3907e1d21f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  positioningCooldown: 0.15
+--- !u!114 &1898762519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898762512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521affc93b404df4c8ea6cdbc31a6e8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  registerOnAwake: 0
+  raiseOnRegister: 0
+  Event: {fileID: 11400000, guid: 3a2d0837cd1a8cd4ebd5fd90dfc398cb, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1898762518}
+        m_MethodName: StartCooldown
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Actions: []
