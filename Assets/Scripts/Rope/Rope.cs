@@ -30,12 +30,12 @@ public class Rope : MonoBehaviour
     [HideInInspector] public Vector2 preSlingPoint;
     [HideInInspector] public Vector2 slingDirection;
     [ReadOnly] [SerializeField] private bool isPreparingSling = false;
-    [ReadOnly][SerializeField] private bool objectLanded = false;
+    [ReadOnly] public bool objectLanded = false;
 
     [Header("Rope extremes")]
-    [SerializeField] private Transform startPoint;
-    [SerializeField] private Transform endPoint;
-    [SerializeField] private Transform middlePoint;
+    public Transform startPoint;
+    public Transform endPoint;
+    public Transform middlePoint;
     [Space(5)]
 
     [Header("Events")]
@@ -193,6 +193,7 @@ public class Rope : MonoBehaviour
     public void CheckForSling() {
         // Just slinged object away
         if(objectLanded && Input.GetMouseButtonUp(0)) {
+            isPreparingSling = false;
             objectLanded = false;
             slingEvent.Raise(slingDirection);
             Debug.Log("Raised sling event");

@@ -38,6 +38,8 @@ public class Ball : MonoBehaviour
         if(!landed && collision.collider.CompareTag("Rope")) {
             landedOnRopeEvent.Raise();
             landed = true;
+            // Do I need this?
+            rb.velocity = Vector2.zero;
         }
     }
 
@@ -75,7 +77,6 @@ public class Ball : MonoBehaviour
         Rope.RopeSegment pullSegment = rope.ropeSegments[(rope.segmentCount - 1) / 2];
         Vector2 pullVelocity = pullSegment.posNow - pullSegment.posOld;
         Vector2 pastVelocity = pullVelocity;
-        Debug.Log(pullVelocity + "velocity");
 
         bool moveRight = (transform.position.x < 0);
 
@@ -94,7 +95,6 @@ public class Ball : MonoBehaviour
         }
 
         while(pullVelocity.y > 0) {
-            Debug.Log(pullVelocity + "velocity");
 
             if (moveRight)
                 transform.position = new Vector2(Mathf.Max(transform.position.x, pullSegment.posNow.x), pullSegment.posNow.y + coll.radius / 2);
