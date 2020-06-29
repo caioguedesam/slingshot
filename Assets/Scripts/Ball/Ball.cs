@@ -19,6 +19,7 @@ public class Ball : MonoBehaviour
     private bool landed = false;
     private bool falling = false;
     private Vector3 slingDirection;
+    private bool won = false;
     [Space(2)]
 
     [Header("Rope detection settings")]
@@ -59,6 +60,10 @@ public class Ball : MonoBehaviour
             // Do I need this?
             rb.velocity = Vector2.zero;
         }
+
+        if(!won && collision.collider.CompareTag("Win")) {
+            won = true;
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision) {
@@ -74,6 +79,10 @@ public class Ball : MonoBehaviour
             rope = collision.gameObject.GetComponent<Rope>();
             // Do I need this?
             rb.velocity = Vector2.zero;
+        }
+
+        if (!won && collision.collider.CompareTag("Win")) {
+            won = true;
         }
     }
 
@@ -120,6 +129,10 @@ public class Ball : MonoBehaviour
                 landed = false;
             }
         }*/
+
+        if(won) {
+            rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, 0.1f);
+        }
     }
 
     public IEnumerator SlingHandler(Vector3 slingDirection) {

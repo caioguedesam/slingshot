@@ -1429,9 +1429,9 @@ GameObject:
   - component: {fileID: 806976953}
   - component: {fileID: 806976952}
   - component: {fileID: 806976951}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Win Platform
-  m_TagString: Untagged
+  m_TagString: Win
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
