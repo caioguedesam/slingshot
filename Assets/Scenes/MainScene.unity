@@ -809,7 +809,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325368111}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 1, z: 0}
+  m_LocalPosition: {x: 1.67, y: 1, z: 0}
   m_LocalScale: {x: 0.26305, y: 0.80465, z: 1}
   m_Children: []
   m_Father: {fileID: 1881225144}
@@ -2111,8 +2111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726a79ae6e244654fbd2ce4ae2bd2d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ropeOriginalSegLen: 0.075
-  ropeSegLen: 0.075
+  ropeOriginalSegLen: 0.08
+  ropeSegLen: 0.08
   ropeDistanceRef: 3
   segmentCount: 35
   maxSlingRadius: 2
