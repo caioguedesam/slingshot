@@ -9,7 +9,7 @@ public class PullPosition : MonoBehaviour
     private float maxSlingRadius;
 
     private void Start() {
-        rope = transform.parent.GetComponent<Rope>();
+        rope = GetComponentInParent<Rope>();
         preSlingPosition = rope.preSlingPoint;
         maxSlingRadius = rope.maxSlingRadius;
     }
