@@ -55,6 +55,7 @@ public class Ball : MonoBehaviour
         if (!landed && collision.collider.CompareTag("Rope") && !Input.GetMouseButton(0)) {
             landedOnRopeEvent.Raise(collision.gameObject);
             landed = true;
+            rope = collision.gameObject.GetComponent<Rope>();
             // Do I need this?
             rb.velocity = Vector2.zero;
         }
@@ -70,6 +71,7 @@ public class Ball : MonoBehaviour
         if (!landed && collision.collider.CompareTag("Rope") && !Input.GetMouseButton(0)) {
             landedOnRopeEvent.Raise(collision.gameObject);
             landed = true;
+            rope = collision.gameObject.GetComponent<Rope>();
             // Do I need this?
             rb.velocity = Vector2.zero;
         }
@@ -100,6 +102,9 @@ public class Ball : MonoBehaviour
     private void Update() {
 
         slingDirection = rope.slingDirection.normalized;
+
+        // Ignore collisions with rope when going up
+        Physics2D.IgnoreLayerCollision(8, 9, (rb.velocity.y > 0.01));
 
         // IMPORTANT: Fix input! Use swipe manager
         /*if(landed && Input.GetMouseButtonUp(0)) {
