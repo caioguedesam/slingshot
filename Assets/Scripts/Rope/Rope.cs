@@ -33,6 +33,7 @@ public class Rope : MonoBehaviour
     [HideInInspector] public Vector2 slingDirection;
     [ReadOnly] [SerializeField] private bool isPreparingSling = false;
     [ReadOnly] public bool objectLanded = false;
+    [SerializeField] private GameObject ballObject = null;
 
     [Header("Rope extremes")]
     public Transform startPoint;
@@ -210,8 +211,11 @@ public class Rope : MonoBehaviour
         lineRenderer.SetPositions(ropePositions);
     }
 
-    public void LandedOnRope() {
-        objectLanded = true;
+    public void LandedOnRope(GameObject rope) {
+        if(rope == this.gameObject) {
+            Debug.Log("Landed on " + this.name);
+            objectLanded = true;
+        }
     }
 
     public void CheckForSling() {

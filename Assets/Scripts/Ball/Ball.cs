@@ -27,7 +27,7 @@ public class Ball : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private SCOB_BaseEvent fallingEvent;
-    [SerializeField] private SCOB_BaseEvent landedOnRopeEvent;
+    [SerializeField] private SCOB_GOEvent landedOnRopeEvent;
 
     private void Start() {
         coll = GetComponent<CircleCollider2D>();
@@ -53,7 +53,7 @@ public class Ball : MonoBehaviour
             rb.velocity = Vector2.zero;
         }*/
         if (!landed && collision.collider.CompareTag("Rope") && !Input.GetMouseButton(0)) {
-            landedOnRopeEvent.Raise();
+            landedOnRopeEvent.Raise(collision.gameObject);
             landed = true;
             // Do I need this?
             rb.velocity = Vector2.zero;
@@ -68,7 +68,7 @@ public class Ball : MonoBehaviour
             rb.velocity = Vector2.zero;
         }*/
         if (!landed && collision.collider.CompareTag("Rope") && !Input.GetMouseButton(0)) {
-            landedOnRopeEvent.Raise();
+            landedOnRopeEvent.Raise(collision.gameObject);
             landed = true;
             // Do I need this?
             rb.velocity = Vector2.zero;
